@@ -48,13 +48,14 @@
                                             </td>
                                             <td>{{ \Carbon\Carbon::parse($jobApplication->applied_date)->format('d M, Y') }}</td>
                                             <td>{{ $jobApplication->job->applications->count() }} Applications</td>
-                                            <td>
+                                            <td style="color: {{$jobApplication->status == 'rejected' ? '#c01313;' : 'green'}}">{{$jobApplication->status ?? '-'}}</td>
+                                            {{-- <td>
                                                 @if ($jobApplication->job->status == 1)
                                                 <div class="job-status text-capitalize">Active</div>
                                                 @else
                                                 <div class="job-status text-capitalize">Block</div>
                                                 @endif                                    
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 <div class="action-dots float-end">
                                                     <button href="#" class="btn" data-bs-toggle="dropdown" aria-expanded="false">

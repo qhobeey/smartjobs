@@ -353,6 +353,37 @@ class AccountController extends Controller
 
     }
 
+    public function postResume(Request $request){
+
+        $id = Auth::user()->id;
+
+        $validator = Validator::make($request->all(),[
+            'resume' => 'required|pdf'
+        ]);
+
+        $image = $request->resume;
+            $ext = $image->getClientOriginalExtension();
+            $imageName = $id.'-'.time().'.'.$ext;
+            $image->move(public_path('/resume/'), $imageName);
+
+            // dd($imageName);
+            
+
+            User::where('id',$id)->update(['resume' => $imageName]);
+
+            session()->flash('success','Resume updated successfully.');
+
+            return redirect()->route('account.resume');
+    }
+    public function addResume(){
+        $id = Auth::user()->id;
+
+        $user = User::where('id',$id)->first();
+
+        return view('front.account.resume',[
+            'user' => $user
+        ]);
+    }
     public function myJobApplications(){
         $jobApplications = JobApplication::where('user_id',Auth::user()->id)
                 ->with(['job','job.jobType','job.applications'])
@@ -529,5 +560,24 @@ class AccountController extends Controller
 
         return redirect()->route('account.login')->with('success','You have successfully changed your password.');
 
+    }
+
+    public function acceptJob(Request $request, $jobid) {
+        $job = JobApplication::findOrFail($jobid);
+        if($job) {
+            $job->status = 'accepted';
+            $job->save();
+        }
+        session()->flash('success','Job status updated successfully.');
+        return redirect()->back();
+    }
+    public function rejectJob(Request $request, $jobid) {
+        $job = JobApplication::findOrFail($jobid);
+        if($job) {
+            $job->status = 'rejected';
+            $job->save();
+        }
+        session()->flash('success','Job status updated successfully.');
+        return redirect()->back();
     }
 }

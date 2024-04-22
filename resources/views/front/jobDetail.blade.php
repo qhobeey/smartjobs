@@ -110,16 +110,38 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
+                                <th>Mobile</th>
                                 <th>Applied Date</th>
+                                <th>Status</th>
+                                <th></th>
                             </tr>
                             @if ($applications->isNotEmpty())
                                 @foreach ($applications as $application)
                                 <tr>
                                     <td>{{ $application->user->name  }}</td>
                                     <td>{{ $application->user->email  }}</td>
-                                    <td>{{ $application->user->mobile  }}</td>
+                                    <td>{{ $application->user->mobile ?? '-'  }}</td>
+                                    <td>
+                                        @if ($application->user->resume)
+                                        <a style="font-size: 12px;color: #8a1e1e;text-decoration: underline;" href="/resume/{{ $application->user->resume}}" target="_blank">click to download resume</a>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($application->applied_date)->format('d M, Y') }}
+                                    </td>
+                                    <td style="color: {{$application->status == 'rejected' ? '#c01313;' : 'green'}}">{{$application->status ?? '-'}}</td>
+                                    <td>
+                                        <div class="action-dots float-end">
+                                            <button href="#" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a onclick="return confirm('Are you sure ?')" class="dropdown-item" href="{{route('accept.job', [$application->id])}}"> <i class="fa fa-check" aria-hidden="true"></i> Accept</a></li>
+                                                <li><a onclick="return confirm('Are you sure ?')" class="dropdown-item" href="{{route('reject.job', [$application->id])}}"><i class="fa fa-ban" aria-hidden="true"></i> Reject</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr> 
                                 @endforeach

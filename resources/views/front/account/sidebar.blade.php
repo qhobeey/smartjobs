@@ -28,9 +28,14 @@
                 <a href="{{ route('account.myJobs') }}">My Jobs</a>
             </li>
             @endif
+            @if (Auth::user()->role == 'user')
+            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <a href="{{ route('account.resume') }}">My Resume</a>
+            </li>
             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                 <a href="{{ route('account.myJobApplications') }}">Jobs Applied</a>
             </li>
+            @endif
             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                 <a href="{{ route('account.savedJobs') }}">Saved Jobs</a>
             </li> 
